@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GestionAssurance | Contrats</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    color: #26344d;
+}
+
+.sidebar {
+    position: fixed;
+    width: 255px;
+    height: 100vh;
+    background: #14233f;
+    padding: 28px 18px;
+    color: white;
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: bold;
+    padding: 0 12px 35px;
+}
+
+.brand span { color: #75a0ff; }
+
+.menu-title {
+    color: #8998b3;
+    font-size: 11px;
+    padding: 0 12px;
+    margin-bottom: 15px;
+}
+
+.menu a {
+    display: block;
+    padding: 13px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    color: #bdc8db;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.menu a:hover, .menu a.active {
+    background: #263d63;
+    color: white;
+}
+
+.menu a.active { border-left: 3px solid #75a0ff; }
+
+.sidebar-bottom {
+    position: absolute;
+    bottom: 25px;
+    left: 18px;
+    right: 18px;
+}
+
+.logout { color: #ffb1b1 !important; }
+
+.main {
+    margin-left: 255px;
+    padding: 30px 38px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+h1 { font-size: 25px; }
+
+.profile {
+    background: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.back {
+    display: inline-block;
+    color: #315efb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 22px;
+}
+
+.banner {
+    background: linear-gradient(115deg, #1c3154, #315efb);
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+
+.banner h2 { font-size: 19px; margin-bottom: 8px; }
+.banner p { font-size: 13px; color: #dce5ff; }
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    border: 1px solid #e9edf4;
+}
+
+.card h2 {
+    font-size: 18px;
+    margin-bottom: 22px;
+}
+
+.table-container { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+th {
+    background: #f8f9fc;
+    color: #8290a5;
+    text-align: left;
+    padding: 15px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #edf0f5;
+    font-size: 12px;
+}
+
+td strong { color: #14233f; }
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    background: #edf2ff;
+    color: #315efb;
+}
+
+.badge-actif { background: #e5f8ee; color: #16834b; }
+.badge-suspendu { background: #fff2dc; color: #a56800; }
+.badge-expire, .badge-resilie { background: #ffe8e8; color: #c03939; }
+.badge-en_attente { background: #edf2ff; color: #315efb; }
+
+.empty {
+    text-align: center;
+    padding: 45px 15px;
+    color: #8290a5;
+    font-size: 13px;
+}
+
+.empty h3 {
+    color: #26344d;
+    margin-bottom: 8px;
+}
+
+.btn-ajouter {
+    display: inline-block;
+    background: #1769aa;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.btn-ajouter:hover {
+    background: #104d80;
+    transform: translateY(-2px);
+}
+
+.btn-modifier {
+    display: inline-block;
+    padding: 8px 13px;
+    background: #f0a52b;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.btn-action {
+    padding: 8px 13px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.btn-resilier { background: #dc3545; }
+.btn-suspendre { background: #f0ad4e; }
+.btn-renouveler { background: #198754; }
+.btn-activer { background: #28a745; }
+
+.recherche {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.recherche input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+}
+
+.btn-rechercher {
+    background: #1769aa;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.btn-reset {
+    background: #e5e7eb;
+    color: #26344d;
+    padding: 12px 20px;
+    border-radius: 7px;
+    text-decoration: none;
+}
+
+@media(max-width: 750px) {
+    .sidebar { width: 75px; padding: 20px 8px; }
+    .brand { font-size: 0; padding: 10px 5px 30px; }
+    .brand span { font-size: 20px; }
+    .menu-title { display: none; }
+    .menu a { font-size: 0; text-align: center; }
+    .main { margin-left: 75px; padding: 20px 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="brand">Gestion<span>Assurance</span></div>
+
+    <div class="menu-title">MENU PRINCIPAL</div>
+
+    <nav class="menu">
+        <a th:href="@{/agent/dashboard}">Tableau de bord</a>
+        <a th:href="@{/agent/clients}">Clients</a>
+        <a th:href="@{/agent/contrats}" class="active">Contrats</a>
+        <a th:href="@{/agent/sinistres}">Sinistres</a>
+        <a th:href="@{/agent/garanties}">Garanties</a>
+        <a th:href="@{/agent/paiements}">Paiements</a>
+        <a th:href="@{/agent/statistiques}">Statistiques</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <nav class="menu">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit"
+                        class="logout"
+                        style="background:none;border:none;cursor:pointer;padding:13px;font-size:13px;">
+                    Déconnexion
+                </button>
+            </form>
+        </nav>
+    </div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Gestion des contrats</h1>
+
+            <a th:href="@{/agent/ajouter-contrat}" class="btn-ajouter">
+                + Ajouter un contrat
+            </a>
+        </div>
+
+        <div class="profile">
+            <span th:text="${session.prenom}"></span>
+            <span th:text="${session.nom}"></span>
+        </div>
+    </header>
+
+    <a class="back" th:href="@{/agent/dashboard}">
+        ← Retour au tableau de bord
+    </a>
+
+    <section class="banner">
+        <h2>Espace contrats</h2>
+        <p>Retrouvez les informations et les statuts des contrats d'assurance.</p>
+    </section>
+
+    <section class="card">
+        <h2>Liste des contrats</h2>
+
+        <form th:action="@{/agent/contrats}" method="get" class="recherche">
+
+            <input type="text"
+                   name="recherche"
+                   th:value="${recherche}"
+                   placeholder="Rechercher par numéro ou nom du client...">
+
+            <button type="submit" class="btn-rechercher">
+                Rechercher
+            </button>
+
+            <a th:href="@{/agent/contrats}" class="btn-reset">
+                Réinitialiser
+            </a>
+
+        </form>
+
+        <div class="table-container">
+
+            <div th:if="${contrats != null and !contrats.isEmpty()}">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Client</th>
+                            <th>Type d'assurance</th>
+                            <th>Date début</th>
+                            <th>Date fin</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="contrat : ${contrats}">
+
+                            <td>
+                                <strong th:text="${contrat.numeroContrat}"></strong>
+                            </td>
+
+                            <td>
+                                <span th:text="${contrat.client.prenom}"></span>
+                                <span th:text="${contrat.client.nom}"></span>
+                            </td>
+
+                            <td th:text="${contrat.typeAssurance.nom}"></td>
+
+                            <td th:text="${contrat.dateDebut}"></td>
+
+                            <td th:text="${contrat.dateFin}"></td>
+
+                            <td>
+                                <span th:text="${contrat.montant}"></span> €
+                            </td>
+
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${contrat.statut != null ? ' badge-' + #strings.toLowerCase(contrat.statut) : ''}"
+                                      th:text="${contrat.statut}">
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <a class="btn-modifier"
+                                   th:href="@{/agent/modifier-contrat(id=${contrat.id})}">
+                                    Modifier
+                                </a>
+
+                                <form th:if="${contrat.statut == 'ACTIF' or contrat.statut == 'SUSPENDU'}"
+                                      th:action="@{/agent/resilier-contrat}"
+                                      method="post"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Voulez-vous vraiment résilier ce contrat ?');">
+
+                                    <input type="hidden" name="id" th:value="${contrat.id}">
+
+                                    <button type="submit" class="btn-action btn-resilier">
+                                        Résilier
+                                    </button>
+                                </form>
+
+                                <form th:if="${contrat.statut == 'ACTIF'}"
+                                      th:action="@{/agent/suspendre-contrat}"
+                                      method="post"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Voulez-vous vraiment suspendre ce contrat ?');">
+
+                                    <input type="hidden" name="id" th:value="${contrat.id}">
+
+                                    <button type="submit" class="btn-action btn-suspendre">
+                                        Suspendre
+                                    </button>
+                                </form>
+
+                                <form th:if="${contrat.statut == 'EXPIRE'}"
+                                      th:action="@{/agent/renouveler-contrat}"
+                                      method="post"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Voulez-vous vraiment renouveler ce contrat pour un an ?');">
+
+                                    <input type="hidden" name="id" th:value="${contrat.id}">
+
+                                    <button type="submit" class="btn-action btn-renouveler">
+                                        Renouveler
+                                    </button>
+                                </form>
+
+                                <form th:if="${contrat.statut == 'EN_ATTENTE'}"
+                                      th:action="@{/agent/activer-contrat}"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    <input type="hidden" name="id" th:value="${contrat.id}">
+
+                                    <button type="submit" class="btn-action btn-activer">
+                                        Activer
+                                    </button>
+                                </form>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="empty"
+                 th:if="${contrats == null or contrats.isEmpty()}">
+
+                <h3>Aucun contrat disponible</h3>
+                <p>Les contrats apparaîtront ici lorsqu'ils seront chargés.</p>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

@@ -1,221 +1,192 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des types d'assurance</title>
+
+    <title>Types d'assurance - GestionAssurance</title>
 
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
         }
 
         body {
-            background: #f4f6fb;
-            color: #263248;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #263247;
         }
 
-        .container {
-            max-width: 1250px;
-            margin: 45px auto;
-            padding: 0 25px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            color: #172b4d;
-        }
-
-        .header p {
-            color: #7b8798;
-            margin-top: 7px;
-        }
-
-        .btn {
-            display: inline-block;
-            border: none;
-            border-radius: 8px;
-            padding: 11px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-primary {
-            background: #3157d5;
+        /* Barre latérale */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 240px;
+            padding: 28px 18px;
+            background: #17243b;
             color: white;
         }
 
-        .btn-primary:hover {
-            background: #2443ad;
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 38px;
         }
 
-        .btn-edit {
-            background: #fff3d6;
-            color: #a66a00;
+        .sidebar a {
+            display: block;
+            padding: 13px 14px;
+            margin: 6px 0;
+            color: #dce5f3;
+            text-decoration: none;
+            border-radius: 7px;
         }
 
-        .btn-detail {
-            background: #e6efff;
-            color: #3157d5;
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #293b59;
+            color: white;
         }
 
-        .btn-delete {
-            background: #ffe6e6;
-            color: #c62828;
+        /* Contenu principal */
+        .main {
+            margin-left: 240px;
+            padding: 35px;
         }
 
-        .btn:hover {
-            opacity: 0.85;
+        h1 {
+            margin-top: 0;
         }
 
-        .message {
-            padding: 14px 18px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+        .subtitle {
+            color: #78849a;
+            margin-bottom: 25px;
         }
 
-        .success {
-            background: #e1f7e9;
-            color: #18743a;
-        }
-
-        .error {
-            background: #ffe6e6;
-            color: #b42318;
-        }
-
-        .search-box {
+        /* Carte */
+        .card {
             background: white;
-            padding: 20px;
+            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 22px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
-        }
-
-        .search-box form {
-            display: flex;
-            gap: 12px;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #dce2ed;
-            border-radius: 8px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .search-box input:focus {
-            border-color: #3157d5;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
-            overflow-x: auto;
-        }
-
-        .table-card h2 {
-            font-size: 19px;
-            margin-bottom: 20px;
-            color: #172b4d;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 750px;
-        }
-
-        th {
-            text-align: left;
-            padding: 15px 12px;
-            background: #f6f8fc;
-            color: #66748a;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #edf0f5;
-            font-size: 14px;
-        }
-
-        tbody tr:hover {
-            background: #fafbff;
-        }
-
-        .badge {
-            padding: 6px 11px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-active {
-            background: #e1f7e9;
-            color: #18743a;
-        }
-
-        .badge-inactive {
-            background: #ffe6e6;
-            color: #b42318;
+            box-shadow: 0 3px 15px rgba(20, 35, 60, .06);
         }
 
         .actions {
             display: flex;
-            gap: 7px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .actions .btn {
-            padding: 8px 11px;
+        /* Boutons */
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #315caa;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #244987;
+        }
+
+        .btn-danger {
+            background: #c0392b;
+        }
+
+        .btn-danger:hover {
+            background: #a93226;
+        }
+
+        /* Tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        th {
+            color: #68758b;
+            font-size: 13px;
+        }
+
+        /* Statuts */
+        .badge {
+            padding: 5px 9px;
+            border-radius: 15px;
             font-size: 12px;
+        }
+
+        .actif {
+            background: #e2f5e9;
+            color: #18723b;
+        }
+
+        .inactif {
+            background: #fde8e8;
+            color: #a52626;
+        }
+
+        /* Messages */
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            border-radius: 7px;
+            background: #e2f5e9;
+            color: #18723b;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #a52626;
         }
 
         .empty {
             text-align: center;
-            padding: 35px;
-            color: #8792a5;
+            color: #8490a3;
+            padding: 25px;
         }
 
-        @media (max-width: 700px) {
-            .container {
-                margin: 25px auto;
-                padding: 0 12px;
+        /* Actions du tableau */
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .action-buttons form {
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media(max-width: 800px) {
+            .sidebar {
+                position: static;
+                width: 100%;
             }
 
-            .header {
-                align-items: flex-start;
-                flex-direction: column;
+            .main {
+                margin-left: 0;
+                padding: 20px;
             }
 
-            .search-box form {
-                flex-direction: column;
-            }
-
-            .header h1 {
-                font-size: 23px;
+            .card {
+                overflow-x: auto;
             }
         }
     </style>
@@ -223,119 +194,175 @@
 
 <body>
 
-<div class="container">
+    <!-- Barre latérale -->
+    <aside class="sidebar">
 
-    <!-- En-tête -->
-    <div class="header">
-        <div>
-            <h1>Types d'assurance</h1>
-            <p>Gérez les différentes offres d'assurance proposées par votre établissement.</p>
-        </div>
+        <div class="brand">GestionAssurance</div>
 
-        <a th:href="@{/types-assurance/ajouter}" class="btn btn-primary">
-            + Ajouter un type
+        <a th:href="@{/admin/dashboard}">
+            Tableau de bord
         </a>
-    </div>
 
-    <!-- Messages -->
-    <div th:if="${success}" class="message success" th:text="${success}"></div>
-    <div th:if="${error}" class="message error" th:text="${error}"></div>
+        <a th:href="@{/utilisateurs}">
+            Utilisateurs
+        </a>
 
-    <!-- Recherche -->
-    <div class="search-box">
-        <form th:action="@{/types-assurance}" method="get">
-            <input type="text"
-                   name="recherche"
-                   placeholder="Rechercher un type d'assurance...">
+        <a th:href="@{/admin/roles}">
+            Gestion des rôles
+        </a>
 
-            <button type="submit" class="btn btn-primary">
-                Rechercher
+        <a class="active" th:href="@{/types-assurance}">
+            Types d'assurance
+        </a>
+
+        <a th:href="@{/contrats}">
+            Contrats
+        </a>
+
+        <a th:href="@{/sinistres}">
+            Sinistres
+        </a>
+
+        <a th:href="@{/statistiques}">
+            Statistiques
+        </a>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit"
+                    style="display:block; width:100%; padding:13px 14px;
+                           margin:6px 0; border:none; border-radius:7px;
+                           background:transparent; color:#dce5f3;
+                           text-align:left; font-size:16px; cursor:pointer;">
+                Déconnexion
             </button>
         </form>
-    </div>
 
-    <!-- Tableau -->
-    <div class="table-card">
+    </aside>
 
-        <h2>Liste des types d'assurance</h2>
+    <!-- Contenu principal -->
+    <main class="main">
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Description</th>
-                    <th>Durée</th>
-                    <th>Tarif de base</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+        <h1>Gestion des types d'assurance</h1>
 
-            <tbody>
+        <p class="subtitle">
+            Consultez et gérez les différents types d'assurance.
+        </p>
 
-                <tr th:each="type : ${typesAssurance}">
+        <!-- Message de succès -->
+        <div th:if="${success}"
+             class="message"
+             th:text="${success}">
+        </div>
 
-                    <td th:text="${type.id}"></td>
+        <!-- Message d'erreur -->
+        <div th:if="${error}"
+             class="message error"
+             th:text="${error}">
+        </div>
 
-                    <td th:text="${type.nom}"></td>
+        <!-- Carte contenant le tableau -->
+        <section class="card">
 
-                    <td th:text="${type.description != null ? type.description : '-'}"></td>
+            <div class="actions">
 
-                    <td th:text="${type.dureeMois != null ? type.dureeMois + ' mois' : '-'}"></td>
+                <h3>Liste des types d'assurance</h3>
 
-                    <td th:text="${type.tarifBase + ' €'}"></td>
+                <a class="btn"
+                   th:href="@{/types-assurance/ajouter}">
+                    + Ajouter un type
+                </a>
 
-                    <td>
-                        <span th:if="${type.actif}" class="badge badge-active">
-                            Actif
-                        </span>
+            </div>
 
-                        <span th:unless="${type.actif}" class="badge badge-inactive">
-                            Inactif
-                        </span>
-                    </td>
+            <table>
 
-                    <td>
-                        <div class="actions">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Durée (mois)</th>
+                        <th>Prix de base</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-                            <a th:href="@{/types-assurance/{id}(id=${type.id})}"
-                               class="btn btn-detail">
-                                Détails
-                            </a>
+                <tbody>
 
-                            <a th:href="@{/types-assurance/modifier/{id}(id=${type.id})}"
-                               class="btn btn-edit">
-                                Modifier
-                            </a>
+                    <tr th:each="type : ${typesAssurance}">
 
-                            <form th:action="@{/types-assurance/supprimer/{id}(id=${type.id})}"
-                                  method="post"
-                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce type d’assurance ?');">
+                        <td th:text="${type.nom}"></td>
 
-                                <button type="submit" class="btn btn-delete">
-                                    Supprimer
-                                </button>
+                        <td th:text="${type.description != null ? type.description : '-'}"></td>
 
-                            </form>
+                        <td th:text="${type.dureeMois != null ? type.dureeMois : '-'}"></td>
 
-                        </div>
-                    </td>
+                        <td th:text="${type.tarifBase != null ? type.tarifBase + ' €' : '-'}"></td>
 
-                </tr>
+                        <td>
 
-                <tr th:if="${#lists.isEmpty(typesAssurance)}">
-                    <td colspan="7" class="empty">
-                        Aucun type d'assurance enregistré.
-                    </td>
-                </tr>
+                            <span th:if="${type.actif}"
+                                  class="badge actif">
+                                Actif
+                            </span>
 
-            </tbody>
-        </table>
+                            <span th:unless="${type.actif}"
+                                  class="badge inactif">
+                                Inactif
+                            </span>
 
-    </div>
+                        </td>
 
-</div>
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <!-- Consulter les détails -->
+                                <a class="btn"
+                                   th:href="@{/types-assurance/{id}(id=${type.id})}">
+                                    Détails
+                                </a>
+
+                                <!-- Modifier -->
+                                <a class="btn"
+                                   th:href="@{/types-assurance/modifier/{id}(id=${type.id})}">
+                                    Modifier
+                                </a>
+
+                                <!-- Désactiver -->
+                                <form th:if="${type.actif}"
+                                      method="post"
+                                      th:action="@{/types-assurance/desactiver/{id}(id=${type.id})}"
+                                      onsubmit="return confirm('Voulez-vous vraiment désactiver ce type d’assurance ?');">
+
+                                    <button class="btn btn-danger" type="submit">
+                                        Désactiver
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <!-- Aucun résultat -->
+                    <tr th:if="${#lists.isEmpty(typesAssurance)}">
+
+                        <td colspan="6" class="empty">
+                            Aucun type d'assurance enregistré.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
 
 </body>
 </html>

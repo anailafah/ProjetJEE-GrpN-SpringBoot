@@ -23,32 +23,46 @@ public class TypeAssuranceController {
     // Afficher tous les types d'assurance
     @GetMapping
     public String afficherTypesAssurance(Model model) {
-        List<TypeAssurance> types = typeAssuranceService.getAllTypesAssurance();
+
+        List<TypeAssurance> types = typeAssuranceService.lister();
+
         model.addAttribute("typesAssurance", types);
+
         return "admin/types-assurance";
     }
 
     // Afficher le formulaire d'ajout
     @GetMapping("/ajouter")
     public String afficherFormulaireAjout(Model model) {
+
         model.addAttribute("typeAssurance", new TypeAssurance());
+
         return "admin/modifier-type-assurance";
     }
 
-    // Enregistrer un nouveau type
+    // Ajouter un type d'assurance
     @PostMapping("/ajouter")
     public String ajouterTypeAssurance(
             @ModelAttribute TypeAssurance typeAssurance,
             RedirectAttributes redirectAttributes) {
 
-        typeAssuranceService.saveTypeAssurance(typeAssurance);
+        try {
 
-        redirectAttributes.addFlashAttribute(
-                "success",
-                "Type d'assurance ajouté avec succès."
-        );
+            typeAssuranceService.ajouter(typeAssurance);
 
-        return "redirect:/types-assurance";
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Type d'assurance ajouté avec succès."
+            );
+
+            return "redirect:/types-assurance";
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/types-assurance/ajouter";
+        }
     }
 
     // Afficher le formulaire de modification
@@ -58,46 +72,49 @@ public class TypeAssuranceController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        TypeAssurance type = typeAssuranceService.getTypeAssuranceById(id);
+        TypeAssurance type = typeAssuranceService.trouverParId(id);
 
         if (type == null) {
+
             redirectAttributes.addFlashAttribute(
                     "error",
                     "Type d'assurance introuvable."
             );
+
             return "redirect:/types-assurance";
         }
 
         model.addAttribute("typeAssurance", type);
+
         return "admin/modifier-type-assurance";
     }
 
-    // Enregistrer les modifications
+    // Modifier un type d'assurance
     @PostMapping("/modifier/{id}")
     public String modifierTypeAssurance(
             @PathVariable Long id,
             @ModelAttribute TypeAssurance typeAssurance,
             RedirectAttributes redirectAttributes) {
 
-        TypeAssurance existant = typeAssuranceService.getTypeAssuranceById(id);
+        try {
 
-        if (existant == null) {
+            typeAssurance.setId(id);
+
+            typeAssuranceService.modifier(typeAssurance);
+
             redirectAttributes.addFlashAttribute(
-                    "error",
-                    "Type d'assurance introuvable."
+                    "success",
+                    "Type d'assurance modifié avec succès."
             );
+
             return "redirect:/types-assurance";
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+            return "redirect:/types-assurance/modifier/" + id;
         }
-
-        typeAssurance.setId(id);
-        typeAssuranceService.saveTypeAssurance(typeAssurance);
-
-        redirectAttributes.addFlashAttribute(
-                "success",
-                "Type d'assurance modifié avec succès."
-        );
-
-        return "redirect:/types-assurance";
     }
 
     // Consulter les détails
@@ -107,42 +124,42 @@ public class TypeAssuranceController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        TypeAssurance type = typeAssuranceService.getTypeAssuranceById(id);
+        TypeAssurance type = typeAssuranceService.trouverParId(id);
 
         if (type == null) {
+
             redirectAttributes.addFlashAttribute(
                     "error",
                     "Type d'assurance introuvable."
             );
+
             return "redirect:/types-assurance";
         }
 
         model.addAttribute("typeAssurance", type);
+
         return "admin/details-type-assurance";
     }
 
-    // Supprimer un type
-    @PostMapping("/supprimer/{id}")
-    public String supprimerTypeAssurance(
+    // Désactiver un type d'assurance
+    @PostMapping("/desactiver/{id}")
+    public String desactiverTypeAssurance(
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
 
-        TypeAssurance type = typeAssuranceService.getTypeAssuranceById(id);
+        try {
 
-        if (type == null) {
+            typeAssuranceService.desactiver(id);
+
             redirectAttributes.addFlashAttribute(
-                    "error",
-                    "Type d'assurance introuvable."
+                    "success",
+                    "Type d'assurance désactivé avec succès."
             );
-            return "redirect:/types-assurance";
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-
-        typeAssuranceService.deleteTypeAssurance(id);
-
-        redirectAttributes.addFlashAttribute(
-                "success",
-                "Type d'assurance supprimé avec succès."
-        );
 
         return "redirect:/types-assurance";
     }

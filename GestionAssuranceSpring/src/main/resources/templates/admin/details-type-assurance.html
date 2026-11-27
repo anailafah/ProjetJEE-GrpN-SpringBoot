@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du type d'assurance</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #263b5e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .info {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #263b5e;
+        }
+
+        .value {
+            margin-top: 6px;
+        }
+
+        .statut {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .actif {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .inactif {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 11px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-modifier {
+            background: #263b5e;
+        }
+
+        .btn-retour {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Détails du type d’assurance</h1>
+
+    <div class="info">
+        <div class="label">Identifiant</div>
+        <div class="value" th:text="${typeAssurance.id}"></div>
+    </div>
+
+    <div class="info">
+        <div class="label">Nom</div>
+        <div class="value" th:text="${typeAssurance.nom}"></div>
+    </div>
+
+    <div class="info">
+        <div class="label">Description</div>
+        <div class="value"
+             th:text="${typeAssurance.description != null
+             ? typeAssurance.description : 'Aucune description'}">
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="label">Durée</div>
+        <div class="value"
+             th:text="${typeAssurance.dureeMois != null
+             ? typeAssurance.dureeMois + ' mois' : 'Non renseignée'}">
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="label">Tarif de base</div>
+        <div class="value">
+            <span th:text="${typeAssurance.tarifBase}"></span> €
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="label">Statut</div>
+        <div class="value">
+            <span th:if="${typeAssurance.actif}"
+                  class="statut actif">Actif</span>
+
+            <span th:unless="${typeAssurance.actif}"
+                  class="statut inactif">Inactif</span>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <a th:href="@{/types-assurance/modifier/{id}(id=${typeAssurance.id})}"
+           class="btn btn-modifier">
+            Modifier
+        </a>
+
+        <a th:href="@{/types-assurance}"
+           class="btn btn-retour">
+            Retour
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

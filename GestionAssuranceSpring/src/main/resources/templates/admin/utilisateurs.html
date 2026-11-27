@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des utilisateurs</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #263445;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-add {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-back {
+            background: #64748b;
+            color: white;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty {
+            text-align: center;
+            color: #888;
+            padding: 30px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .inactive {
+            color: #dc2626;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h1>Gestion des utilisateurs</h1>
+            <p class="subtitle">Consulter et gérer les utilisateurs de l'application</p>
+        </div>
+
+        <a th:href="@{/admin/dashboard}" class="btn btn-back">
+            Retour au Dashboard
+        </a>
+    </div>
+
+    <div class="card">
+
+        <a th:href="@{/utilisateurs/ajouter}" class="btn btn-add">
+            + Ajouter un utilisateur
+        </a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="u : ${utilisateurs}">
+                    <td th:text="${u.id}"></td>
+                    <td th:text="${u.nom}"></td>
+                    <td th:text="${u.prenom}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.telephone}"></td>
+
+                    <td>
+                        <span th:if="${u.actif}" class="status">Actif</span>
+                        <span th:unless="${u.actif}" class="inactive">Inactif</span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{/utilisateurs/modifier/{id}(id=${u.id})}"
+                               class="btn btn-edit">Modifier</a>
+
+                            <form th:action="@{/utilisateurs/supprimer/{id}(id=${u.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                                <button type="submit" class="btn btn-delete">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(utilisateurs)}">
+                    <td colspan="7" class="empty">
+                        Aucun utilisateur enregistré.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>
